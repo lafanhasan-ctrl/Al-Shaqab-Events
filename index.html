@@ -3106,7 +3106,7 @@ function CSVImport({
     // 10 blank rows ready to fill
     ...Array(10).fill(Array(CSV_HDR.split(',').length).fill('').join(','))];
     // Sheet 2: Reference table \u2014 each valid value in its own cell
-    const refRows = [['REFERENCE \u2014 Valid values for each field (copy exactly)'], [''], ['Field', 'Valid Values →'], ['Department', ...DEPARTMENTS], ['Location Code', ...LOCATIONS.map(l => l.code)], ['Location Name', ...LOCATIONS.map(l => l.label)], ['Status', ...STATUSES], ['Type of Event', ...EV_TYPES], ['Womens Only', 'Yes', 'No'], ['Cancelled', 'Yes', 'No'], ['Date format', 'YYYY-MM-DD', 'Example: 2026-03-15'], ['Time format', 'HH:MM (24hr)', 'Example: 09:00', 'Example: 21:30']].map(r => r.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(','));
+    const refRows = [['REFERENCE \u2014 Valid values for each field (copy exactly)'], [''], ['Field', 'Valid Values →'], ['Department', ...DEPARTMENTS, '\u2014 OR type any custom name for an external owner (e.g. "External Partner")'], ['Location Code', ...LOCATIONS.map(l => l.code), '\u2014 OR type any custom venue name for an external location (e.g. "Lusail Arena")'], ['Location Name', ...LOCATIONS.map(l => l.label)], ['Status', ...STATUSES], ['Type of Event', ...EV_TYPES], ['Womens Only', 'Yes', 'No'], ['Cancelled', 'Yes', 'No'], ['Date format', 'YYYY-MM-DD', 'Example: 2026-03-15'], ['Time format', 'HH:MM (24hr)', 'Example: 09:00', 'Example: 21:30'], [''], ['NOTE: For external locations or owners, type the full name freely (e.g. "Lusail Arena" or "External Partner"). It will be stored as-is.']].map(r => r.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(','));
 
     // Combine with a separator
     const allRows = [...dataRows, '', '--- REFERENCE TABLE (do not delete rows above this line) ---', ...refRows];
@@ -3180,12 +3180,12 @@ function CSVImport({
             if (rawEdInput && !edParsed) issues.push(`Invalid End Date "${rawEdInput}" \u2014 will be cleared (use YYYY-MM-DD)`);
             if (rawBi && !biParsed) issues.push(`Invalid Bump-In Date "${rawBi}" \u2014 will be cleared (use YYYY-MM-DD)`);
             if (rawBo && !boParsed) issues.push(`Invalid Bump-Out Date "${rawBo}" \u2014 will be cleared (use YYYY-MM-DD)`);
-            if (rawLoc && !LOC_CODES.includes(loc)) issues.push(`Unknown location "${rawLoc}" \u2014 will be cleared`);
-            if (rawDept && !DEPARTMENTS.includes(dept)) issues.push(`Unknown department "${rawDept}"`);
+            if (rawLoc && !LOC_CODES.includes(loc)) issues.push(`External venue "${rawLoc}" \u2014 stored as-is`);
+            if (rawDept && !DEPARTMENTS.includes(dept)) issues.push(`External owner "${rawDept}" \u2014 stored as-is`);
             if (rawSt && !STATUSES.includes(st)) issues.push(`Unknown status "${rawSt}" \u2014 defaulted to Confirmed`);
             const dup = name && events.some(ev => ev.name.toLowerCase() === name.toLowerCase() && ev.startDate === sd);
             if (dup) issues.push('Possible duplicate event');
-            const cleanLoc = LOC_CODES.includes(loc) ? loc : '';
+            const cleanLoc = loc;
             const con = cleanLoc && detectConflicts(events, {
               startDate: sd,
               endDate: ed || sd,
@@ -3198,7 +3198,7 @@ function CSVImport({
               _flag: flag,
               _issues: issues,
               name,
-              department: DEPARTMENTS.includes(dept) ? dept : '',
+              department: dept,
               type: EV_TYPES.includes(type) ? type : '',
               startDate: sd,
               endDate: ed,
