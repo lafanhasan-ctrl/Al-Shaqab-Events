@@ -3575,7 +3575,7 @@ function CSVImport({
         fontSize: 11.5,
         borderBottom: '1px solid var(--border)'
       }
-    }, isEditing ? /*#__PURE__*/React.createElement("select", {
+    }, isEditing ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("select", {
       style: {
         fontSize: 11.5,
         border: '1px solid var(--gold)',
@@ -3583,14 +3583,30 @@ function CSVImport({
         padding: '2px 4px',
         fontFamily: 'inherit'
       },
-      value: r.department,
-      onChange: ev => updateRow(i, 'department', ev.target.value),
+      value: (r.department && !DEPARTMENTS.includes(r.department)) ? '__ext__' : r.department,
+      onChange: ev => updateRow(i, 'department', ev.target.value === '__ext__' ? 'External' : ev.target.value),
       onClick: ev => ev.stopPropagation()
     }, /*#__PURE__*/React.createElement("option", {
       value: ""
     }, "—"), DEPARTMENTS.map(d => /*#__PURE__*/React.createElement("option", {
       key: d
-    }, d))) : r.department || /*#__PURE__*/React.createElement("em", {
+    }, d)), /*#__PURE__*/React.createElement("option", {
+      value: "__ext__"
+    }, "External")), (r.department && !DEPARTMENTS.includes(r.department)) && /*#__PURE__*/React.createElement("input", {
+      style: {
+        marginTop: 4,
+        fontSize: 11.5,
+        border: '1px solid var(--gold)',
+        borderRadius: 4,
+        padding: '2px 4px',
+        fontFamily: 'inherit',
+        width: '100%'
+      },
+      value: r.department,
+      onChange: ev => updateRow(i, 'department', ev.target.value),
+      onClick: ev => ev.stopPropagation(),
+      placeholder: "Specify external owner..."
+    })) : r.department || /*#__PURE__*/React.createElement("em", {
       style: {
         color: 'var(--ink-lt)'
       }
@@ -3600,7 +3616,7 @@ function CSVImport({
         fontSize: 11.5,
         borderBottom: '1px solid var(--border)'
       }
-    }, isEditing ? /*#__PURE__*/React.createElement("select", {
+    }, isEditing ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("select", {
       style: {
         fontSize: 11.5,
         border: '1px solid var(--gold)',
@@ -3608,15 +3624,31 @@ function CSVImport({
         padding: '2px 4px',
         fontFamily: 'inherit'
       },
-      value: r.location,
-      onChange: ev => updateRow(i, 'location', ev.target.value),
+      value: (r.location && !LOC_CODES.includes(r.location)) ? '__ext__' : r.location,
+      onChange: ev => updateRow(i, 'location', ev.target.value === '__ext__' ? 'External' : ev.target.value),
       onClick: ev => ev.stopPropagation()
     }, /*#__PURE__*/React.createElement("option", {
       value: ""
     }, "—"), LOCATIONS.map(l => /*#__PURE__*/React.createElement("option", {
       key: l.code,
       value: l.code
-    }, l.code))) : r.location || /*#__PURE__*/React.createElement("em", {
+    }, l.code)), /*#__PURE__*/React.createElement("option", {
+      value: "__ext__"
+    }, "External")), (r.location && !LOC_CODES.includes(r.location)) && /*#__PURE__*/React.createElement("input", {
+      style: {
+        marginTop: 4,
+        fontSize: 11.5,
+        border: '1px solid var(--gold)',
+        borderRadius: 4,
+        padding: '2px 4px',
+        fontFamily: 'inherit',
+        width: '100%'
+      },
+      value: r.location,
+      onChange: ev => updateRow(i, 'location', ev.target.value),
+      onClick: ev => ev.stopPropagation(),
+      placeholder: "Specify external venue..."
+    })) : r.location || /*#__PURE__*/React.createElement("em", {
       style: {
         color: 'var(--ink-lt)'
       }
