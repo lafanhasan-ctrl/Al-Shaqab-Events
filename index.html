@@ -4506,9 +4506,10 @@ function ExportModal({
   const [fDept, setFDept] = useState([]);
   const [fStatus, setFStatus] = useState([]);
   const [fType, setFType] = useState([]);
+  const [fLoc, setFLoc] = useState([]);
   const [fWO, setFWO] = useState(false);
   const toggleChip = (setArr, val) => setArr(p => p.includes(val) ? p.filter(x => x !== val) : [...p, val]);
-  const activeFilters = [...fDept, ...fStatus, ...fType, ...(fWO ? ["Women's Only"] : [])];
+  const activeFilters = [...fDept, ...fStatus, ...fType, ...fLoc.map(c => LOC[c] || c), ...(fWO ? ["Women's Only"] : [])];
   const filteredEvents = () => {
     let ev = events.filter(ev => !ev.archived);
     if (from) ev = ev.filter(ev => ev.startDate >= (from || ''));
@@ -4516,6 +4517,7 @@ function ExportModal({
     if (fDept.length > 0) ev = ev.filter(ev => fDept.includes(ev.department));
     if (fStatus.length > 0) ev = ev.filter(ev => fStatus.includes(autoStatus(ev)));
     if (fType.length > 0) ev = ev.filter(ev => fType.includes(ev.type));
+    if (fLoc.length > 0) ev = ev.filter(ev => fLoc.includes(ev.location));
     if (fWO) ev = ev.filter(ev => ev.womensOnly);
     return ev;
   };
@@ -4816,6 +4818,38 @@ function ExportModal({
     }
   }, t)))), /*#__PURE__*/React.createElement("div", {
     style: {
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 11,
+      color: 'var(--ink-lt)',
+      marginBottom: 4,
+      fontWeight: 500
+    }
+  }, "Location"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 5
+    }
+  }, LOCATIONS.map(loc => /*#__PURE__*/React.createElement("button", {
+    key: loc.code,
+    title: loc.label,
+    onClick: () => toggleChip(setFLoc, loc.code),
+    style: {
+      padding: '3px 10px',
+      fontSize: 11.5,
+      borderRadius: 20,
+      border: '1.5px solid',
+      cursor: 'pointer',
+      fontFamily: 'inherit',
+      background: fLoc.includes(loc.code) ? 'var(--crimson)' : 'var(--white)',
+      color: fLoc.includes(loc.code) ? '#fff' : 'var(--ink)',
+      borderColor: fLoc.includes(loc.code) ? 'var(--crimson)' : 'var(--border)'
+    }
+  }, loc.code)))), /*#__PURE__*/React.createElement("div", {
+    style: {
       display: 'flex',
       alignItems: 'center',
       gap: 8,
@@ -4838,7 +4872,7 @@ function ExportModal({
       color: 'var(--ink)',
       cursor: 'pointer'
     }
-  }, "Women's Only events")), (fDept.length > 0 || fStatus.length > 0 || fType.length > 0 || fWO) && /*#__PURE__*/React.createElement("div", {
+  }, "Women's Only events")), (fDept.length > 0 || fStatus.length > 0 || fType.length > 0 || fLoc.length > 0 || fWO) && /*#__PURE__*/React.createElement("div", {
     style: {
       padding: '6px 10px',
       background: 'var(--gold-pale)',
@@ -4855,6 +4889,7 @@ function ExportModal({
       setFDept([]);
       setFStatus([]);
       setFType([]);
+      setFLoc([]);
       setFWO(false);
     },
     style: {
