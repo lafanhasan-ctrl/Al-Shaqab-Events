@@ -944,7 +944,7 @@ const PRINT_BASE_CSS=`
    = */
 function printListHTML(ev, dateRangeLabel){
   const fmtD=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';
-  const fmtDS=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short'}):'—';
+  const fmtDS=d=>d?new Date(d+'T00:00:00').toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}):'—';
   const LOC_MAP={OUT:'Longines Outdoor Arena',IN:'Longines Indoor Arena',MFH:'Multifunctional Hall','WU-A':'Warm Up Arena',VIP:'VIP Floor','L-1ST':'Longines 1st Floor',EVMC:'EVMC','EED-OUT':'EED Outdoor','EED-IN':'EED Indoor','SH-A':'Shaded Arena','AS-A&T':'Al Shaqab Area & Track','AS-V':'Al Shaqab Village'};
   
   const rows=ev.map((e,i)=>{
@@ -1256,7 +1256,8 @@ function fmtD(d) {
 function fmtDS(d) {
   return d ? new Date(d + 'T00:00:00').toLocaleDateString('en-GB', {
     day: '2-digit',
-    month: 'short'
+    month: 'short',
+    year: 'numeric'
   }) : '';
 }
 function addDays(d, n) {
